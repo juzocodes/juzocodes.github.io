@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Juzo Roblox Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: one column of sections, each with a mono label on the left rail (desktop) — the "file tree" of a Studio project. */
+:root {
+  --ink: #0A1620;     /* page */
+  --deep: #10222F;    /* surfaces */
+  --line: #1E394A;    /* borders */
+  --text: #E7F0F4;
+  --muted: #8AA3B3;
+  --sun: #FFC83D;     /* accent */
+  --sea: #45B8E6;     /* secondary */
+  --display: "Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
+  --body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--ink); color: var(--text); font: 16px/1.6 var(--body); }
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; border-radius: 4px; }
+
+.wrap { width: min(1120px, 100% - 40px); margin-inline: auto; }
+
+/* header */
+header { position: sticky; top: 0; z-index: 5; background: rgba(10, 22, 32, .88); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.bar { display: flex; align-items: center; gap: 28px; height: 60px; }
+.logo { font: 800 22px/1 var(--display); letter-spacing: -.02em; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.logo span { width: 10px; height: 10px; background: var(--sun); border-radius: 2px; }
+nav { display: flex; gap: 22px; margin-left: auto; font: 500 14px var(--body); }
+nav a { text-decoration: none; color: var(--muted); }
+nav a:hover { color: var(--text); }
+
+.btn { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 8px; font: 600 15px var(--body); text-decoration: none; border: 1px solid var(--line); background: var(--deep); color: var(--text); cursor: pointer; transition: transform .12s, background .12s; }
+.btn:hover { transform: translateY(-1px); background: #15303F; }
+.btn.primary { background: var(--sun); color: #1B1300; border-color: var(--sun); }
+.btn.primary:hover { background: #FFD666; }
+.btn .k { font: 600 13px var(--mono); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; padding: 72px 0 64px; }
+.tag { font: 500 13px var(--mono); color: var(--sea); letter-spacing: .02em; }
+h1 { font: 800 clamp(40px, 6vw, 68px)/1.0 var(--display); letter-spacing: -.035em; margin: 14px 0 20px; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--sun); }
+.lede { color: var(--muted); font-size: 18px; max-width: 34em; margin: 0 0 28px; }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.shot { position: relative; }
+.shot img { border-radius: 14px; border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(0,0,0,.7); }
+.shot figcaption { position: absolute; left: 14px; bottom: -14px; background: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; font: 500 12px var(--mono); color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) {
+  .hero > * { animation: rise .6s cubic-bezier(.2,.7,.2,1) both; }
+  .hero > .shot { animation-delay: .12s; }
+  @keyframes rise { from { transform: translateY(14px); } to { transform: none; } }
+}
+
+/* facts strip */
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.facts div { padding: 18px 20px; border-right: 1px solid var(--line); }
+.facts div:last-child { border-right: 0; }
+.facts b { display: block; font: 800 30px/1 var(--display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.facts span { color: var(--muted); font-size: 14px; }
+
+/* sections */
+section { padding: 88px 0 0; }
+.sec-head { display: grid; grid-template-columns: 200px 1fr; gap: 32px; margin-bottom: 32px; }
+.sec-head .tag { padding-top: 10px; }
+h2 { font: 800 clamp(30px, 4vw, 44px)/1.05 var(--display); letter-spacing: -.03em; margin: 0 0 12px; text-wrap: balance; }
+.sec-head p { color: var(--muted); margin: 0; max-width: 40em; }
+
+/* project */
+.proj { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }
+.proj figure { margin: 0; }
+.proj img { border-radius: 10px; border: 1px solid var(--line); }
+.proj .stack { display: grid; gap: 20px; }
+figure figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+.built { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-top: 28px; }
+.built div { background: var(--deep); padding: 20px; }
+.built h3 { font: 700 18px/1.2 var(--display); margin: 0 0 6px; letter-spacing: -.01em; }
+.built p { margin: 0; color: var(--muted); font-size: 15px; }
+
+/* code */
+.codewrap { display: grid; grid-template-columns: 1fr 1.25fr; gap: 28px; align-items: start; margin-top: 28px; }
+.codewrap .note h3 { font: 700 22px/1.2 var(--display); margin: 0 0 10px; }
+.codewrap .note p { color: var(--muted); margin: 0 0 12px; }
+pre { tab-size: 2; margin: 0; background: #07111A; border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; overflow-x: auto; font: 13.5px/1.65 var(--mono); color: #CFE0E8; }
+pre .c { color: #5F7D8E; } pre .k { color: var(--sea); } pre .s { color: var(--sun); } pre .n { color: #F59E8B; }
+.file { font: 500 12px var(--mono); color: var(--muted); margin: 0 0 8px; }
+
+/* gallery */
+.gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.gallery figure { margin: 0; background: var(--deep); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.gallery img { aspect-ratio: 4 / 3; width: 100%; object-fit: cover; }
+.gallery figcaption { margin: 0; padding: 10px 12px; font-size: 14px; color: var(--text); display: flex; justify-content: space-between; gap: 8px; }
+.gallery figcaption i { font: normal 12px var(--mono); color: var(--muted); }
+.gallery .wide { grid-column: span 2; }
+.gallery .wide img { aspect-ratio: 8 / 3; }
+
+
+/* videos */
+.vids { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.vid { position: relative; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 16px; row-gap: 2px; align-items: center; padding: 22px; border: 1px solid var(--line); border-radius: 12px; background: linear-gradient(160deg, #12303F, var(--deep)); text-decoration: none; transition: transform .12s, border-color .12s; }
+.vid:hover { transform: translateY(-2px); border-color: var(--sea); }
+.play { grid-row: span 2; width: 48px; height: 48px; border-radius: 50%; background: var(--sun); position: relative; }
+.play::after { content: ""; position: absolute; left: 19px; top: 15px; border-left: 15px solid #1B1300; border-top: 9px solid transparent; border-bottom: 9px solid transparent; }
+.vn { position: absolute; right: 18px; top: 14px; font: 600 12px var(--mono); color: var(--muted); }
+.vt { font: 700 18px/1.2 var(--display); }
+.vw { font-size: 14px; color: var(--sea); }
+.vid:last-child:nth-child(3n+1) { grid-column: 1 / -1; }
+
+/* services */
+.svc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.svc div { border: 1px solid var(--line); border-radius: 12px; padding: 22px; }
+.svc h3 { font: 700 19px/1.2 var(--display); margin: 0 0 8px; }
+.svc p { margin: 0; color: var(--muted); font-size: 15px; }
+.svc .n { font: 600 12px var(--mono); color: var(--sun); display: block; margin-bottom: 14px; }
+
+/* how */
+.how { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--line); }
+.how div { padding: 20px 20px 0 0; }
+.how b { font: 700 17px var(--display); display: block; margin-bottom: 6px; }
+.how p { margin: 0; color: var(--muted); font-size: 15px; }
+
+/* contact */
+.contact { margin: 96px 0 0; padding: 48px; border-radius: 16px; background: var(--sun); color: #1B1300; display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; align-items: center; }
+.contact h2 { color: #1B1300; margin: 0 0 8px; }
+.contact p { margin: 0; color: #4A3A10; }
+.handles { display: grid; gap: 10px; }
+.handle { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #1B1300; color: var(--text); border-radius: 10px; padding: 12px 14px 12px 18px; }
+.handle small { display: block; font: 500 12px var(--mono); color: #C9B57A; }
+.handle strong { font: 600 18px var(--body); }
+.handle .btn { height: 36px; padding: 0 14px; font-size: 14px; background: #2E2405; border-color: #4A3A10; color: var(--sun); }
+footer { padding: 36px 0 48px; color: var(--muted); font-size: 14px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+@media (max-width: 900px) {
+  .hero, .proj, .codewrap, .contact { grid-template-columns: 1fr; }
+  .sec-head { grid-template-columns: 1fr; gap: 6px; }
+  .facts { grid-template-columns: repeat(2, 1fr); }
+  .facts div:nth-child(2) { border-right: 0; }
+  .facts div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+  .built, .svc { grid-template-columns: 1fr 1fr; }
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .vids { grid-template-columns: 1fr 1fr; }
+  .vid:last-child:nth-child(3n+1) { grid-column: auto; }
+  .vid:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .how { grid-template-columns: 1fr 1fr; gap: 0 20px; }
+  nav { display: none; }
+  .bar .btn { margin-left: auto; }
+  .contact { padding: 28px; }
+}
+@media (max-width: 520px) {
+  .built, .svc, .how { grid-template-columns: 1fr; }
+  .gallery { grid-template-columns: 1fr; }
+  .vids { grid-template-columns: 1fr; }
+  .vid:last-child:nth-child(odd) { grid-column: auto; }
+  .gallery .wide { grid-column: auto; }
+  .gallery .wide img { aspect-ratio: 4 / 3; }
+  .hero { padding-top: 44px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#top"><span></span>Juzo</a>
+    <nav aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#videos">Videos</a>
+      <a href="#models">3D models</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="btn primary" href="#contact">Hire me</a>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <div class="hero">
+    <div>
+      <div class="tag">ROBLOX LUAU SCRIPTER · BLENDER</div>
+      <h1>I script the game <em>and build the models</em> for it.</h1>
+      <p class="lede">3+ years writing Luau for Roblox: round systems, events, data saving, shops and UI. I also model assets in Blender and bring them into Studio myself, so a feature ships with its own visuals.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#contact">Message me on Discord</a>
+        <a class="btn" href="#videos">Watch clips</a>
+        <a class="btn" href="https://www.roblox.com/games/91863794749844" target="_blank" rel="noopener">Play my game ↗</a>
+      </div>
+    </div>
+    <figure class="shot" style="margin:0">
+      <img src="img/banner.jpg" alt="Splash or Survive banner: a Roblox character jumps over a piranha between cracking islands, a volcano and meteors behind" width="1376" height="768">
+      <figcaption>Splash or Survive · my own game</figcaption>
+    </figure>
+  </div>
+
+  <div class="facts" aria-label="Splash or Survive in numbers">
+    <div><b>3+</b><span>years of Luau</span></div>
+    <div><b>14</b><span>big round events</span></div>
+    <div><b>7</b><span>voteable arena modifiers</span></div>
+    <div><b>1</b><span>dev, code + models</span></div>
+  </div>
+
+  <section id="work">
+    <div class="sec-head">
+      <div class="tag">01 / WORK</div>
+      <div>
+        <h2>Splash or Survive</h2>
+        <p>A round-based survival game on islands over a pit. The water rises, rings of islands sink toward the center, and events hit the arena until one player is left. I wrote the gameplay, data and UI, and modeled the event assets.</p>
+      </div>
+    </div>
+
+    <div class="proj">
+      <figure>
+        <img src="img/tsunami.jpg" alt="Tsunami event: two walls of water sweep the islands, a highlighted safe lane crosses the arena" width="1400" height="606">
+        <figcaption>Tsunami event. Two waves from different sides, safe lanes are marked ahead of time.</figcaption>
+      </figure>
+      <div class="stack">
+        <figure>
+          <img src="img/kraken_game.jpg" alt="Kraken tentacle rising from the water behind the islands" width="1400" height="606">
+          <figcaption>Kraken. A 16-segment tentacle bends and slams across a warned lane.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/lanes.jpg" alt="Arena from above with highlighted danger lanes during an event" width="1400" height="606">
+          <figcaption>Warning lanes give players time to react before a hit.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="built">
+      <div><h3>Round director</h3><p>Phases (warmup, chaos, storm, final), event pacing, two events at once late in the round, a softer start for new players.</p></div>
+      <div><h3>14 big events + small ones</h3><p>Tsunami, kraken, whale, disco floor, volcano, tornado and more. Each one is a self-contained module with its own cleanup.</p></div>
+      <div><h3>Arena shrink</h3><p>Outer rings of islands sink on a schedule with a countdown over each island, the center never sinks.</p></div>
+      <div><h3>Economy and saving</h3><p>Coins and rubies, shop, cases, daily rewards, spin wheel, revives. All saved with DataStore.</p></div>
+      <div><h3>Live codes</h3><p>Admins create, edit and disable promo codes in game. They go live on every server in about a minute, no publish needed.</p></div>
+      <div><h3>Admin tools</h3><p>Start or end rounds, trigger any event or modifier, manage players and server settings. Every action is checked on the server.</p></div>
+    </div>
+
+    <div class="codewrap">
+      <div class="note">
+        <h3>Readable code, not just working code</h3>
+        <p>A sample from the event system: picking the next big event by weight, skipping recent ones and anything that clashes with an event already running.</p>
+        <p>Every module is split server/client, with config tables at the top so values can be tuned without digging through logic.</p>
+      </div>
+      <div>
+        <p class="file">ServerScriptService/RoundEvents.lua</p>
+<pre><code><span class="c">-- pick a big event: not in skip, not clashing with active ones;</span>
+<span class="c">-- boost = id that gets double weight (won the vote)</span>
+<span class="k">function</span> Events.Pick(skip, active, boost)
+	<span class="k">if</span> <span class="k">type</span>(skip) == <span class="s">"string"</span> <span class="k">then</span> skip = { [skip] = <span class="k">true</span> } <span class="k">end</span>
+	skip = skip <span class="k">or</span> {}; active = active <span class="k">or</span> {}
+	<span class="k">local</span> pool, total = {}, <span class="n">0</span>
+	<span class="k">for</span> _, e <span class="k">in</span> <span class="k">ipairs</span>(Events.List) <span class="k">do</span>
+		<span class="k">local</span> ok = <span class="k">not</span> skip[e.Id] <span class="k">and not</span> active[e.Id]
+		<span class="k">for</span> a <span class="k">in</span> <span class="k">pairs</span>(active) <span class="k">do</span>
+			<span class="k">if</span> Events.Clash[a] <span class="k">and</span> Events.Clash[a][e.Id] <span class="k">then</span> ok = <span class="k">false</span> <span class="k">end</span>
+		<span class="k">end</span>
+		<span class="k">if</span> ok <span class="k">then</span>
+			<span class="k">local</span> w = (e.Weight <span class="k">or</span> <span class="n">1</span>) * (e.Id == boost <span class="k">and</span> <span class="n">2</span> <span class="k">or</span> <span class="n">1</span>)
+			<span class="k">table.insert</span>(pool, { e, w }); total += w
+		<span class="k">end</span>
+	<span class="k">end</span>
+	<span class="k">if</span> #pool == <span class="n">0</span> <span class="k">then return nil end</span>
+	<span class="k">local</span> x = <span class="k">math.random</span>() * total
+	<span class="k">for</span> _, it <span class="k">in</span> <span class="k">ipairs</span>(pool) <span class="k">do</span>
+		x -= it[<span class="n">2</span>]; <span class="k">if</span> x &lt;= <span class="n">0</span> <span class="k">then return</span> it[<span class="n">1</span>] <span class="k">end</span>
+	<span class="k">end</span>
+	<span class="k">return</span> pool[#pool][<span class="n">1</span>]
+<span class="k">end</span></code></pre>
+      </div>
+    </div>
+
+    <div class="proj" style="margin-top:28px; grid-template-columns: 1.3fr 1fr;">
+      <figure>
+        <img src="img/settings.jpg" alt="In-game settings window with music and sound sliders, a code redeem box and a hide UI option" width="1080" height="640">
+        <figcaption>Player UI: settings with audio sliders, codes and a clean-screen mode for recording.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/admin.jpg" alt="Admin panel with tabs for round, players, me, server and codes, and a grid of event buttons" width="742" height="562">
+        <figcaption>Admin panel for testing and live moderation.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+
+  <section id="videos">
+    <div class="sec-head">
+      <div class="tag">02 / VIDEOS</div>
+      <div>
+        <h2>See it running</h2>
+        <p>Short clips recorded in game. They open on YouTube.</p>
+      </div>
+    </div>
+    <div class="vids">
+      <a class="vid" href="https://youtu.be/bi3tedo24zA" target="_blank" rel="noopener">
+        <span class="play" aria-hidden="true"></span>
+        <span class="vn">01</span>
+        <span class="vt">Gameplay clip 1</span>
+        <span class="vw">Watch on YouTube ↗</span>
+      </a>
+      <a class="vid" href="https://youtu.be/JbZLuQWwtM4" target="_blank" rel="noopener">
+        <span class="play" aria-hidden="true"></span>
+        <span class="vn">02</span>
+        <span class="vt">Gameplay clip 2</span>
+        <span class="vw">Watch on YouTube ↗</span>
+      </a>
+      <a class="vid" href="https://youtu.be/E1QTf9BzuT4" target="_blank" rel="noopener">
+        <span class="play" aria-hidden="true"></span>
+        <span class="vn">03</span>
+        <span class="vt">Gameplay clip 3</span>
+        <span class="vw">Watch on YouTube ↗</span>
+      </a>
+      <a class="vid" href="https://youtu.be/f16q2IVlCOg" target="_blank" rel="noopener">
+        <span class="play" aria-hidden="true"></span>
+        <span class="vn">04</span>
+        <span class="vt">Gameplay clip 4</span>
+        <span class="vw">Watch on YouTube ↗</span>
+      </a>
+      <a class="vid" href="https://youtu.be/T_IaBU8Daf4" target="_blank" rel="noopener">
+        <span class="play" aria-hidden="true"></span>
+        <span class="vn">05</span>
+        <span class="vt">Gameplay clip 5</span>
+        <span class="vw">Watch on YouTube ↗</span>
+      </a>
+      <a class="vid" href="https://youtu.be/8b_rM6ROUPs" target="_blank" rel="noopener">
+        <span class="play" aria-hidden="true"></span>
+        <span class="vn">06</span>
+        <span class="vt">Gameplay clip 6</span>
+        <span class="vw">Watch on YouTube ↗</span>
+      </a>
+      <a class="vid" href="https://youtu.be/g-X5Gw2VOgg" target="_blank" rel="noopener">
+        <span class="play" aria-hidden="true"></span>
+        <span class="vn">07</span>
+        <span class="vt">Tornado</span>
+        <span class="vw">Watch on YouTube ↗</span>
+      </a>
+    </div>
+  </section>
+
+  <section id="models">
+    <div class="sec-head">
+      <div class="tag">03 / 3D MODELS</div>
+      <div>
+        <h2>Modeled in Blender, built for Studio</h2>
+        <p>Stylized low-poly assets made for the game: clean pivots, Roblox scale, exported as FBX and set up in Studio. Segmented models (like the tentacle) are built so the code can bend them.</p>
+      </div>
+    </div>
+    <div class="gallery">
+      <figure><img src="img/ek_tentacle.jpg" alt="Purple kraken tentacle segment with suckers" loading="lazy"><figcaption>Kraken tentacle <i>16 segments</i></figcaption></figure>
+      <figure><img src="img/ek_wave.jpg" alt="Stylized wave tile with foam" loading="lazy"><figcaption>Tsunami wave <i>tileable</i></figcaption></figure>
+      <figure><img src="img/shopstand_v1.jpg" alt="Shop stand with striped awning and a SHOP sign" loading="lazy"><figcaption>Shop stand <i>lobby</i></figcaption></figure>
+      <figure><img src="img/volcano_v1.jpg" alt="Low-poly volcano with lava streams" loading="lazy"><figcaption>Volcano <i>event</i></figcaption></figure>
+      <figure><img src="img/isl_prev_0.jpg" alt="Themed island tiles from above" loading="lazy"><figcaption>Island styles <i>shop skins</i></figcaption></figure>
+      <figure><img src="img/lk_tower.jpg" alt="Rock pillar with grass ledges" loading="lazy"><figcaption>Rock tower <i>lobby</i></figcaption></figure>
+      <figure class="wide"><img src="img/biomekit_prev.jpg" alt="Set of plants, reeds and a traffic cone props" loading="lazy"><figcaption>Biome prop kit <i>decor</i></figcaption></figure>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="sec-head">
+      <div class="tag">04 / SERVICES</div>
+      <div>
+        <h2>What I can build for you</h2>
+        <p>New systems from scratch or work inside your existing project.</p>
+      </div>
+    </div>
+    <div class="svc">
+      <div><span class="n">GAMEPLAY</span><h3>Game systems</h3><p>Rounds, events, combat, abilities, tools, NPC logic, minigames.</p></div>
+      <div><span class="n">DATA</span><h3>Saving and economy</h3><p>DataStore, currencies, inventories, shops, pets, upgrades, leaderboards, codes.</p></div>
+      <div><span class="n">UI</span><h3>Interfaces</h3><p>Menus, HUD, shops and popups with animation and polish, working on PC and mobile.</p></div>
+      <div><span class="n">TOOLS</span><h3>Admin and dev tools</h3><p>Admin panels, debug commands, live config, test switches.</p></div>
+      <div><span class="n">3D</span><h3>Blender assets</h3><p>Props, creatures and map pieces in a stylized look, ready to use in Studio.</p></div>
+      <div><span class="n">FIXES</span><h3>Bugs and performance</h3><p>Finding why something breaks, cleaning up old scripts, cutting lag.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="tag">05 / HOW I WORK</div>
+      <div><h2>Simple and clear</h2></div>
+    </div>
+    <div class="how">
+      <div><b>1. Scope</b><p>We agree on what gets built and the price before I start.</p></div>
+      <div><b>2. Milestones</b><p>Big jobs are split into parts, each paid when it's done.</p></div>
+      <div><b>3. Progress</b><p>You see videos or test builds as I go, not just at the end.</p></div>
+      <div><b>4. Payment</b><p>Robux. Small test task available if you want to check my code first.</p></div>
+    </div>
+  </section>
+
+  <div class="contact" id="contact">
+    <div>
+      <h2>Have a project?</h2>
+      <p>Send me a message on Discord with what you need and your budget. I usually reply the same day.</p>
+    </div>
+    <div class="handles">
+      <div class="handle">
+        <div><small>DISCORD</small><strong>juzocodes</strong></div>
+        <button class="btn" type="button" id="copy-discord" data-copy="juzocodes">Copy</button>
+      </div>
+      <div class="handle">
+        <div><small>ROBLOX</small><strong>@clokjuz</strong></div>
+        <a class="btn" href="https://www.roblox.com/users/3935713906/profile" target="_blank" rel="noopener">Profile ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>© 2026 Juzo · Roblox Luau scripter</span>
+    <a href="https://www.roblox.com/games/91863794749844" target="_blank" rel="noopener">Splash or Survive on Roblox ↗</a>
+  </footer>
+</main>
+
+<script>
+document.getElementById("copy-discord").addEventListener("click", async (e) => {
+  const b = e.currentTarget;
+  try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = "Copied"; }
+  catch { b.textContent = "juzocodes"; }
+  setTimeout(() => { b.textContent = "Copy"; }, 1600);
+});
+</script>
+</body>
+</html>
