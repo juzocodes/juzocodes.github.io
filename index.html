@@ -89,6 +89,7 @@ figure figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
 
 /* code */
 .codewrap { display: grid; grid-template-columns: 1fr 1.25fr; gap: 28px; align-items: start; margin-top: 28px; }
+.codewrap > div { min-width: 0; } /* let the code scroll instead of stretching the column */
 .codewrap .note h3 { font: 700 22px/1.2 var(--display); margin: 0 0 10px; }
 .codewrap .note p { color: var(--muted); margin: 0 0 12px; }
 pre { tab-size: 2; margin: 0; background: #07111A; border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; overflow-x: auto; font: 13.5px/1.65 var(--mono); color: #CFE0E8; }
@@ -104,6 +105,13 @@ pre .c { color: #5F7D8E; } pre .k { color: var(--sea); } pre .s { color: var(--s
 .gallery .wide { grid-column: span 2; }
 .gallery .wide img { aspect-ratio: 8 / 3; }
 
+
+/* tower defense */
+.tdvid { position: relative; display: block; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+.tdvid img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform .2s; }
+.tdvid:hover img { transform: scale(1.02); }
+.tdvid .play { position: absolute; left: 50%; top: 50%; width: 68px; height: 68px; transform: translate(-50%, -50%); box-shadow: 0 6px 24px rgba(0,0,0,.4); }
+.tdvid .play::after { left: 27px; top: 21px; border-left-width: 21px; border-top-width: 13px; border-bottom-width: 13px; }
 
 /* videos */
 .vids { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
@@ -174,6 +182,7 @@ footer { padding: 36px 0 48px; color: var(--muted); font-size: 14px; display: fl
     <a class="logo" href="#top"><span></span>Juzo</a>
     <nav aria-label="Sections">
       <a href="#work">Work</a>
+      <a href="#td">Tower Defense</a>
       <a href="#videos">Videos</a>
       <a href="#models">3D models</a>
       <a href="#services">Services</a>
@@ -291,9 +300,70 @@ footer { padding: 36px 0 48px; color: var(--muted); font-size: 14px; display: fl
   </section>
 
 
+  <section id="td">
+    <div class="sec-head">
+      <div class="tag">02 / TOWER DEFENSE</div>
+      <div>
+        <h2>Tower Defense</h2>
+        <p>A tower defense base I built as a separate project. Zombies walk a path toward the core, you place towers from a hotbar and they shoot whatever is in range. 20 waves with bosses on 10 and 20.</p>
+      </div>
+    </div>
+
+    <a class="tdvid" href="https://youtu.be/DZ7b_WRp9PY" target="_blank" rel="noopener">
+      <img src="https://img.youtube.com/vi/DZ7b_WRp9PY/hqdefault.jpg" alt="Tower defense gameplay: towers shooting zombies walking along a sand path" width="480" height="360" loading="lazy">
+      <span class="play" aria-hidden="true"></span>
+    </a>
+
+    <div class="built">
+      <div><h3>Placement</h3><p>Ghost preview with a range circle that turns red on the path, near other towers or at the edge. The same rules run on the server, so the client can't cheat a spot.</p></div>
+      <div><h3>Targeting</h3><p>First, last, strongest or closest. Single target, splash, slow and poison damage, with upgrades up to level 4.</p></div>
+      <div><h3>Light server</h3><p>Enemies are invisible parts moved with one BulkMoveTo call per frame. Models, animations and health bars are only on the client.</p></div>
+      <div><h3>Waves</h3><p>Wave mix is generated from rules instead of a huge table: new enemy types unlock as you go, health scales per wave.</p></div>
+      <div><h3>Units and rarity</h3><p>8 towers from Common to Mythic, plus random traits like faster fire or extra range on top.</p></div>
+      <div><h3>Match loop</h3><p>Intermission, waves, breaks, vote to skip, game over when the core hits 0, then a clean reset.</p></div>
+    </div>
+
+    <div class="codewrap">
+      <div class="note">
+        <h3>How a tower picks a target</h3>
+        <p>Each enemy only stores how far it has walked along the path, so "first" is just the biggest number. No pathfinding or extra lookups needed.</p>
+        <p>Distance is checked squared on X/Z to skip a square root for every enemy, every shot.</p>
+      </div>
+      <div>
+        <p class="file">ServerScriptService/Services/TowerService.lua</p>
+<pre><code><span class="k">local function</span> findTarget(tower)
+	<span class="k">local</span> rangeSq = tower.Stats.Range ^ <span class="n">2</span>
+	<span class="k">local</span> mode = tower.TargetMode
+	<span class="k">local</span> best, bestScore = <span class="k">nil</span>, -<span class="k">math.huge</span>
+
+	<span class="k">for</span> _, enemy <span class="k">in</span> EnemyService.Alive <span class="k">do</span>
+		<span class="k">local</span> offset = enemy.Part.Position - tower.Pos
+		<span class="k">local</span> distSq = offset.X * offset.X + offset.Z * offset.Z
+		<span class="k">if</span> distSq &lt;= rangeSq <span class="k">then</span>
+			<span class="k">local</span> score
+			<span class="k">if</span> mode == <span class="s">"First"</span> <span class="k">then</span>
+				score = enemy.Dist
+			<span class="k">elseif</span> mode == <span class="s">"Last"</span> <span class="k">then</span>
+				score = -enemy.Dist
+			<span class="k">elseif</span> mode == <span class="s">"Strongest"</span> <span class="k">then</span>
+				score = enemy.Health + enemy.Dist * <span class="n">0.001</span>
+			<span class="k">else</span>
+				score = -distSq
+			<span class="k">end</span>
+			<span class="k">if</span> score &gt; bestScore <span class="k">then</span>
+				best, bestScore = enemy, score
+			<span class="k">end</span>
+		<span class="k">end</span>
+	<span class="k">end</span>
+	<span class="k">return</span> best
+<span class="k">end</span></code></pre>
+      </div>
+    </div>
+  </section>
+
   <section id="videos">
     <div class="sec-head">
-      <div class="tag">02 / VIDEOS</div>
+      <div class="tag">03 / VIDEOS</div>
       <div>
         <h2>See it running</h2>
         <p>Short clips recorded in game. They open on YouTube.</p>
@@ -347,7 +417,7 @@ footer { padding: 36px 0 48px; color: var(--muted); font-size: 14px; display: fl
 
   <section id="models">
     <div class="sec-head">
-      <div class="tag">03 / 3D MODELS</div>
+      <div class="tag">04 / 3D MODELS</div>
       <div>
         <h2>Modeled in Blender, built for Studio</h2>
         <p>Stylized low-poly assets made for the game: clean pivots, Roblox scale, exported as FBX and set up in Studio. Segmented models (like the tentacle) are built so the code can bend them.</p>
@@ -366,7 +436,7 @@ footer { padding: 36px 0 48px; color: var(--muted); font-size: 14px; display: fl
 
   <section id="services">
     <div class="sec-head">
-      <div class="tag">04 / SERVICES</div>
+      <div class="tag">05 / SERVICES</div>
       <div>
         <h2>What I can build for you</h2>
         <p>New systems from scratch or work inside your existing project.</p>
@@ -384,7 +454,7 @@ footer { padding: 36px 0 48px; color: var(--muted); font-size: 14px; display: fl
 
   <section>
     <div class="sec-head">
-      <div class="tag">05 / HOW I WORK</div>
+      <div class="tag">06 / HOW I WORK</div>
       <div><h2>Simple and clear</h2></div>
     </div>
     <div class="how">
